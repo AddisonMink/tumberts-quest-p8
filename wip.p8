@@ -6,37 +6,29 @@ __lua__
 #include add-item-ui.lua
 #include select-items-ui.lua
 #include hud-ui.lua
+#include world.lua
 
 max_items = 5
 ui = ui_module()
 hud = hud_ui_module(max_items)
 
-cards = {
+items = {
   { name = "axe", desc = "swing axe", icon = 33 },
   { name = "bow", desc = "shoot bow", icon = 48 }
 }
 
-inventory_ui = inventory_ui_module(cards)
-add_item_ui = add_item_ui_module(cards, 3, cards[1])
-select_items_ui = select_items_ui_module(cards, 3)
+world = world_module(items, max_items)
 
 function _init()
-  camera(-4, -16)
 end
 
 function _update()
-  --inventory_ui:update()
-  --add_item_ui:update()
-  --select_items_ui:update()
+  world:update()
 end
 
 function _draw()
   cls()
-  map()
-  hud:draw(10, cards)
-  --inventory_ui:draw()
-  --add_item_ui:draw()
-  --select_items_ui:draw()
+  world:draw()
 end
 
 __gfx__
