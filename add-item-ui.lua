@@ -61,7 +61,7 @@ function add_item_ui_module(items, max_items, new_item)
     local info_h = 12
     local item_h = 32
     local confirm_h = 30
-    local h = info_h + item_h + confirm_h + ui.radius * 4
+    local h = info_h + item_h + confirm_h + ui.radius * 10
     local x = (128 - w) / 2
     local y = (128 - h) / 2
 

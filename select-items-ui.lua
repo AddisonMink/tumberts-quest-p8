@@ -35,7 +35,7 @@ function select_items_ui_module(items, max_items)
     local w = 92
     local h = 64
     local x = (128 - w) / 2
-    local y = (128 - h) / 2
+    local y = (128 - h) / 2 - 24
 
     y = ui:draw_npatch(x, y, w, h)
     y = ui:draw_line("select items", x, y, w)
