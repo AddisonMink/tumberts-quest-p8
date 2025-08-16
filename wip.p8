@@ -5,8 +5,11 @@ __lua__
 #include inventory-ui.lua
 #include add-item-ui.lua
 #include select-items-ui.lua
+#include hud-ui.lua
 
+max_items = 5
 ui = ui_module()
+hud = hud_ui_module(max_items)
 
 cards = {
   { name = "axe", desc = "swing axe", icon = 33 },
@@ -24,15 +27,16 @@ end
 function _update()
   --inventory_ui:update()
   --add_item_ui:update()
-  select_items_ui:update()
+  --select_items_ui:update()
 end
 
 function _draw()
   cls()
   map()
+  hud:draw(10, cards)
   --inventory_ui:draw()
   --add_item_ui:draw()
-  select_items_ui:draw()
+  --select_items_ui:draw()
 end
 
 __gfx__
