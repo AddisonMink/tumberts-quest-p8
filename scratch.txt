@@ -1,0 +1,23 @@
+update
+
+ local node = nodes[node_key]
+
+    if state == "idle" then
+      if btnp(0) and node.left then
+        node_key = node.left
+        state = "enter"
+      elseif btnp(1) and node.right then
+        node_key = node.right
+        state = "enter"
+      elseif btnp(2) and node.up then
+        node_key = node.up
+        state = "enter"
+      elseif btnp(3) and node.down then
+        node_key = node.down
+        state = "enter"
+      elseif btnp(4) or btnp(5) then
+      end
+    elseif state == "enter" then
+      clear_fog(node)
+      state = "idle"
+    end

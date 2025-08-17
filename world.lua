@@ -6,8 +6,25 @@ function world_module(items, max_items)
   local me = {}
 
   function me:update()
-    if state == "enter" then
-      clear_fog(nodes[node_key])
+    local node = nodes[node_key]
+
+    if state == "idle" then
+      if btnp(0) and node.left then
+        node_key = node.left
+        state = "enter"
+      elseif btnp(1) and node.right then
+        node_key = node.right
+        state = "enter"
+      elseif btnp(2) and node.up then
+        node_key = node.up
+        state = "enter"
+      elseif btnp(3) and node.down then
+        node_key = node.down
+        state = "enter"
+      elseif btnp(4) or btnp(5) then
+      end
+    elseif state == "enter" then
+      clear_fog(node)
       state = "idle"
     end
   end
@@ -15,20 +32,20 @@ function world_module(items, max_items)
   function me:draw()
     map()
     hud:draw(10, items)
-    draw_map()
+    draw_fog()
     draw_player(nodes[node_key])
   end
 
   function clear_fog(node)
-    for x = node.x - 3, node.x + 3, 1 do
-      for y = node.y - 2, node.y + 2, 1 do
+    for x = max(0, node.x - 3), min(node.x + 3, 14), 1 do
+      for y = max(0, node.y - 2), min(node.y + 2, 12), 1 do
         local dist = abs(node.x - x) + abs(node.y - y)
         if dist <= 3 then fog[x][y] = false end
       end
     end
   end
 
-  function draw_map()
+  function draw_fog()
     for x = 0, 14, 1 do
       for y = 0, 12, 1 do
         if fog[x][y] then
@@ -57,8 +74,8 @@ function world_module(items, max_items)
   camera(-4, -24)
 
   -- for each node
-  for x = 1, 14, 3 do
-    for y = 5, 14, 2 do
+  for x = 1, 13, 3 do
+    for y = 1, 11, 2 do
       local key = x .. "," .. y
       nodes[key] = { x = x, y = y }
       local node = nodes[key]
@@ -88,6 +105,7 @@ function world_module(items, max_items)
       end
     end
   end
+
   -- initialization end
 
   return me
