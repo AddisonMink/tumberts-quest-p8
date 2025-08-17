@@ -17,7 +17,11 @@ items = {
   { name = "bow", desc = "shoot bow", icon = 48 }
 }
 
-world = world_module(items, max_items)
+treasures = {
+  [7 .. "," .. 7] = items[2]
+}
+
+world = world_module(items, max_items, treasures)
 
 function _init()
 end

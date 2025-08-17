@@ -1,4 +1,4 @@
-function world_module(items, max_items)
+function world_module(items, max_items, treasures)
   local state = "enter"
   local nodes = {}
   local from_key = nil
@@ -8,6 +8,8 @@ function world_module(items, max_items)
   local timer_max = 0
   local fog = {}
   local node_key = 7 .. "," .. 5
+  local inventory_ui = nil
+  local add_item_ui = nil
   local me = {}
 
   function me:update()
@@ -43,13 +45,46 @@ function world_module(items, max_items)
         timer_max = move_speed * 2
         timer = timer_max
       elseif btnp(4) or btnp(5) then
+        state = "inventory"
+        inventory_ui = inventory_ui_module(items)
       end
     elseif state == "moving" then
       timer -= 1 / 30
       if timer <= 0 then state = "enter" end
     elseif state == "enter" then
       clear_fog(node)
-      state = "idle"
+      local id = mget(node.x, node.y)
+      if id == 49 then
+        -- empty node
+        state = "idle"
+      elseif id == 36 then
+        -- battle node
+        state = "idle"
+      elseif id == 5 then
+        -- treasure node
+        if treasures[node_key] then
+          state = "add_item"
+          local new_item = treasures[node_key]
+          add_item_ui = add_item_ui_module(items, max_items, new_item)
+        else
+          state = "idle"
+          mset(node.x, node.y, 49)
+        end
+      elseif id == 37 then
+        -- home node
+        state = "idle"
+      end
+    elseif state == "inventory" then
+      if inventory_ui:update() == "cancel" then
+        state = "idle"
+        inventory_ui = nil
+      end
+    elseif state == "add_item" then
+      local result = add_item_ui:update()
+      if result then
+        state = "idle"
+        mset(node.x, node.y, 49)
+      end
     end
   end
 
@@ -62,6 +97,12 @@ function world_module(items, max_items)
       draw_player_between(nodes[from_key], nodes[to_key], t)
     else
       draw_player_at(nodes[node_key])
+    end
+
+    if state == "inventory" then
+      inventory_ui:draw()
+    elseif state == "add_item" then
+      add_item_ui:draw()
     end
   end
 
