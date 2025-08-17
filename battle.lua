@@ -55,11 +55,30 @@ function battle_util_module()
   function me:move(entity, entities, enemy_col, col, row)
     if col < 1 or col > 6 or row < 1 or row > 3 then return end
     if entity.player and col >= enemy_col then return end
+    local h = entity.col ~= col
+    me:blur(entities, entity.col, entity.row, h)
     entity.col = col
     entity.row = row
   end
 
-  function me:melee(entities, row, col, sprite, params)
+  function me:blur(entities, col, row, horizontal)
+    local timer = { t = 0.1 }
+    local id = horizontal and 12 or 42
+
+    local me = {
+      col = col,
+      row = row,
+      sprite = sprite:mk(id, "big", 0, -6)
+    }
+
+    function me:update()
+      if tick(timer) then del(entities, me) end
+    end
+
+    add(entities, me)
+  end
+
+  function me:melee(entities, col, row, sprite, params)
     local timer = { t = params.dur or 0 }
 
     local me = {

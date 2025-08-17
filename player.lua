@@ -31,7 +31,7 @@ function add_player(entities, col, row)
       lock.t = attack_dur
       cooldown.t = attack_cd_max
       me.sprite.id = 40
-      battle_util:melee(entities, me.row, me.col + 1, sword_sprite, sword_params)
+      battle_util:melee(entities, me.col + 1, me.row, sword_sprite, sword_params)
     end
   end
 
