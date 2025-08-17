@@ -1,6 +1,11 @@
 function world_module(items, max_items)
   local state = "enter"
   local nodes = {}
+  local from_key = nil
+  local to_key = nil
+  local move_speed = 0.33 / 2
+  local timer = 0
+  local timer_max = 0
   local fog = {}
   local node_key = 7 .. "," .. 5
   local me = {}
@@ -10,19 +15,38 @@ function world_module(items, max_items)
 
     if state == "idle" then
       if btnp(0) and node.left then
+        state = "moving"
+        from_key = node_key
+        to_key = node.left
         node_key = node.left
-        state = "enter"
+        timer_max = move_speed * 3
+        timer = timer_max
       elseif btnp(1) and node.right then
+        state = "moving"
+        from_key = node_key
+        to_key = node.right
         node_key = node.right
-        state = "enter"
+        timer_max = move_speed * 3
+        timer = timer_max
       elseif btnp(2) and node.up then
+        state = "moving"
+        from_key = node_key
+        to_key = node.up
         node_key = node.up
-        state = "enter"
+        timer_max = move_speed * 2
+        timer = timer_max
       elseif btnp(3) and node.down then
+        state = "moving"
+        from_key = node_key
+        to_key = node.down
         node_key = node.down
-        state = "enter"
+        timer_max = move_speed * 2
+        timer = timer_max
       elseif btnp(4) or btnp(5) then
       end
+    elseif state == "moving" then
+      timer -= 1 / 30
+      if timer <= 0 then state = "enter" end
     elseif state == "enter" then
       clear_fog(node)
       state = "idle"
@@ -33,7 +57,12 @@ function world_module(items, max_items)
     map()
     hud:draw(10, items)
     draw_fog()
-    draw_player(nodes[node_key])
+    if state == "moving" then
+      local t = (timer_max - timer) / timer_max
+      draw_player_between(nodes[from_key], nodes[to_key], t)
+    else
+      draw_player_at(nodes[node_key])
+    end
   end
 
   function clear_fog(node)
@@ -55,14 +84,26 @@ function world_module(items, max_items)
     end
   end
 
-  function draw_player(node)
+  function draw_player_between(node1, node2, t)
+    local x = node1.x + (node2.x - node1.x) * t
+    local y = node1.y + (node2.y - node1.y) * t
+    draw_player(x * 8, y * 8)
+  end
+
+  function draw_player_at(node)
+    local x = node.x * 8
+    local y = node.y * 8
+    draw_player(x, y)
+  end
+
+  function draw_player(x, y)
     local frame = flr(time() * 4) % 4
     local id = frame == 0 and 4
         or frame == 1 and 20
         or frame == 2 and 4
         or frame == 3 and 20
     local flip_x = frame == 3
-    spr(id, node.x * 8, node.y * 8, 1, 1, flip_x)
+    spr(id, x, y, 1, 1, flip_x)
   end
 
   function is_path(x, y)
