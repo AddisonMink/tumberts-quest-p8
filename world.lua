@@ -10,12 +10,25 @@ function world_module(items, max_items, treasures)
   local node_key = 7 .. "," .. 5
   local inventory_ui = nil
   local add_item_ui = nil
+  local battle = nil
+  local hp = 10
   local me = {}
 
   function me:update()
     local node = nodes[node_key]
 
-    if state == "idle" then
+    if state == "battle" then
+      local result = battle:update()
+      if result.type == "win" then
+        state = "idle"
+        hp = result.hp
+        mset(node.x, node.y, 49)
+      elseif result.type == "perfect" then
+        state = "add_item"
+        add_item_ui = add_item_ui_module(items, max_items, result.reward)
+      elseif result.type == "lose" then
+      end
+    elseif state == "idle" then
       if btnp(0) and node.left then
         state = "moving"
         from_key = node_key
@@ -59,7 +72,8 @@ function world_module(items, max_items, treasures)
         state = "idle"
       elseif id == 36 then
         -- battle node
-        state = "idle"
+        state = "battle"
+        battle = battle_module(hp, items)
       elseif id == 5 then
         -- treasure node
         if treasures[node_key] then
@@ -90,19 +104,20 @@ function world_module(items, max_items, treasures)
 
   function me:draw()
     map()
-    hud:draw(10, items)
+    hud:draw(hp, items)
     draw_fog()
-    if state == "moving" then
+
+    if state == "battle" then
+      battle:draw()
+    elseif state == "inventory" then
+      inventory_ui:draw()
+    elseif state == "add_item" then
+      add_item_ui:draw()
+    elseif state == "moving" then
       local t = (timer_max - timer) / timer_max
       draw_player_between(nodes[from_key], nodes[to_key], t)
     else
       draw_player_at(nodes[node_key])
-    end
-
-    if state == "inventory" then
-      inventory_ui:draw()
-    elseif state == "add_item" then
-      add_item_ui:draw()
     end
   end
 

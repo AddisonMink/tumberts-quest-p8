@@ -28,7 +28,7 @@ treasures = {
 }
 
 world = world_module(items, max_items, treasures)
-battle = battle_module()
+--battle = battle_module()
 
 function tick(timer)
   if timer.t > 0 then timer.t -= 1 / 30 end
@@ -39,14 +39,14 @@ function _init()
 end
 
 function _update()
-  --world:update()
-  battle:update()
+  world:update()
+  --battle:update()
 end
 
 function _draw()
   cls()
-  --world:draw()
-  battle:draw()
+  world:draw()
+  --battle:draw()
 end
 
 __gfx__

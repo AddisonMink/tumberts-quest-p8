@@ -1,4 +1,4 @@
-function battle_module()
+function battle_module(hp, items)
   local w = 16 * 6
   local h = 14 * 3
   local x = 64 - 4 - w / 2
@@ -12,11 +12,13 @@ function battle_module()
   local state = "ready"
   local timer = { t = ready_dur }
   local perfect = true
+  local reward = { name = "axe", desc = "swing axe", icon = 33 }
   local me = {
     enemy_col = 4
   }
 
   player = add_player(entities, 2, 2)
+  player.hp = hp
   add_redcap(entities, 4, 1)
 
   function me:update()
@@ -31,17 +33,18 @@ function battle_module()
       invincibility_system()
       death_system()
       end_system()
-    elseif state == "win" then
-      return "win"
-    elseif state == "perfect" then
-      return "perfect"
-    elseif state == "lose" then
-      return "lose"
+    elseif state == "win" and btnp(5) then
+      return { type = "win", hp = player.hp }
+    elseif state == "perfect" and btnp(5) then
+      return { type = "perfect", reward = reward, hp = player.hp }
+    elseif state == "lose" and btnp(5) then
+      return { type = "lose", hp = 0 }
     end
+    return {}
   end
 
   function me:draw()
-    hud:draw(player.hp, {})
+    hud:draw(player.hp, items)
     draw_grid()
     draw_entities()
     if state == "ready" then
