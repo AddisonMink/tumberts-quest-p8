@@ -11,6 +11,7 @@ function battle_module()
   }
 
   player = add_player(entities, 2, 2)
+  add_redcap(entities, 4, 1)
 
   function me:update()
     update_system()
@@ -23,7 +24,7 @@ function battle_module()
 
   function update_system()
     for e in all(entities) do
-      if e.update then e:update(enemy_col) end
+      if e.update then e:update(enemy_col,player) end
     end
   end
 
