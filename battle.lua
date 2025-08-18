@@ -9,10 +9,10 @@ function battle_module(hp, all_items)
   local invincibility_dur = 0.5
   local player = nil
   local entities = {}
-  local state = "select_items"
-  local timer = { t = 0 }
+  local state = #all_items > 0 and "select_items" or "ready"
+  local timer = { t = ready_dur }
   local perfect = true
-  local reward = { name = "axe", desc = "swing axe", icon = 33 }
+  local reward = items.axe
   local max_items = 3
   local select_items_ui = select_items_ui_module(all_items, max_items)
   local me = {

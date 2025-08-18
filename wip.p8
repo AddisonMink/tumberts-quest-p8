@@ -20,15 +20,13 @@ hud = hud_ui_module()
 battle_util = battle_util_module()
 items = item_module()
 
-items = {
-  items.axe
-}
+inventory = {}
 
 treasures = {
   [7 .. "," .. 7] = items[2]
 }
 
-world = world_module(items, max_items, treasures)
+world = world_module(inventory, max_items, treasures)
 --battle = battle_module()
 
 function tick(timer)
