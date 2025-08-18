@@ -3,10 +3,15 @@ function battle_module()
   local h = 14 * 3
   local x = 64 - 4 - w / 2
   local y = 64 - 24 - h / 2
+  local ready_dur = 0.5
+  local start_dur = 0.2
   local enemy_col = 4
   local invincibility_dur = 0.5
   local player = nil
   local entities = {}
+  local state = "ready"
+  local timer = { t = ready_dur }
+  local perfect = true
   local me = {
     enemy_col = 4
   }
@@ -15,15 +20,41 @@ function battle_module()
   add_redcap(entities, 4, 1)
 
   function me:update()
-    update_system()
-    hit_system()
-    invincibility_system()
-    death_system()
+    if state == "ready" and tick(timer) then
+      state = "start"
+      timer.t = start_dur
+    elseif state == "start" and tick(timer) then
+      state = "play"
+    elseif state == "play" then
+      update_system()
+      hit_system()
+      invincibility_system()
+      death_system()
+      end_system()
+    elseif state == "win" then
+      return "win"
+    elseif state == "perfect" then
+      return "perfect"
+    elseif state == "lose" then
+      return "lose"
+    end
   end
 
   function me:draw()
+    hud:draw(player.hp, {})
     draw_grid()
     draw_entities()
+    if state == "ready" then
+      draw_message("ready!")
+    elseif state == "start" then
+      draw_message("start!")
+    elseif state == "win" then
+      draw_message("clear!")
+    elseif state == "perfect" then
+      draw_message("perfect!")
+    elseif state == "lose" then
+      draw_message("defeat!")
+    end
   end
 
   function update_system()
@@ -45,6 +76,9 @@ function battle_module()
             target.hp -= 1
             target.invincible.t = invincibility_dur
             target.sprite.color = 7
+            if target.hitbox == "player" then
+              perfect = false
+            end
           end
         end
       end
@@ -69,6 +103,19 @@ function battle_module()
     end
   end
 
+  function end_system()
+    if player.hp <= 0 then
+      state = "lose"
+    else
+      for e in all(entities) do
+        if e.hitbox == "enemy" then
+          return
+        end
+      end
+      state = perfect and "perfect" or "win"
+    end
+  end
+
   function draw_grid()
     for col = 1, 6, 1 do
       local id = col < enemy_col and 6 or 8
@@ -76,6 +123,13 @@ function battle_module()
         sprite:spr(sprite:mk(id, "big"), x + (col - 1) * 16, y + (row - 1) * 14)
       end
     end
+  end
+
+  function draw_message(text)
+    local tx = x + (w - #text * 4) / 2
+    local ty = y + (h - 6) / 2
+    print(text, tx + 1, ty + 1, 0)
+    print(text, tx, ty, 15)
   end
 
   function draw_entities()
