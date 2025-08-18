@@ -17,7 +17,7 @@ function sprite_module()
     y += sprite.offset_y
     if sprite.color then
       for i = 0, 15, 1 do
-        pal(i, color)
+        pal(i, sprite.color)
       end
     end
 

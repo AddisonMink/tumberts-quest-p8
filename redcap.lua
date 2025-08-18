@@ -15,7 +15,9 @@ function add_redcap(entities, col, row)
     col = col,
     row = row,
     sprite = sprite:mk(14, "big", 0, -6),
-    enemy = true
+    hitbox = "enemy",
+    hp = 3,
+    invincible = { t = 0 }
   }
 
   function me:update(enemy_col, player)

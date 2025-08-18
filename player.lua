@@ -4,7 +4,7 @@ function add_player(entities, col, row)
   local lock = { t = 0 }
   local cooldown = { t = 0 }
   local sword_sprite = sprite:mk(10, "long", -1, 1)
-  local sword_params = { dur = attack_dur }
+  local sword_params = { dur = attack_dur, hurtbox = "enemy" }
 
   local me = {
     col = col,

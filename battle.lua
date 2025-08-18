@@ -4,6 +4,7 @@ function battle_module()
   local x = 64 - 4 - w / 2
   local y = 64 - 24 - h / 2
   local enemy_col = 4
+  local invincibility_dur = 0.5
   local player = nil
   local entities = {}
   local me = {
@@ -15,6 +16,9 @@ function battle_module()
 
   function me:update()
     update_system()
+    hit_system()
+    invincibility_system()
+    death_system()
   end
 
   function me:draw()
@@ -24,7 +28,44 @@ function battle_module()
 
   function update_system()
     for e in all(entities) do
-      if e.update then e:update(enemy_col,player) end
+      if e.update then e:update(enemy_col, player) end
+    end
+  end
+
+  function hit_system()
+    for damager in all(entities) do
+      if damager.hurtbox then
+        for target in all(entities) do
+          local hit = damager.hurtbox == target.hitbox
+              and damager.col == target.col
+              and damager.row == target.row
+              and target.invincible.t <= 0
+
+          if hit then
+            target.hp -= 1
+            target.invincible.t = invincibility_dur
+            target.sprite.color = 7
+          end
+        end
+      end
+    end
+  end
+
+  function invincibility_system()
+    for e in all(entities) do
+      if e.invincible then
+        if tick(e.invincible) then
+          e.sprite.color = nil
+        end
+      end
+    end
+  end
+
+  function death_system()
+    for e in all(entities) do
+      if e.hp and e.hp <= 0 then
+        del(entities, e)
+      end
     end
   end
 
@@ -43,6 +84,11 @@ function battle_module()
         local ex = x + (e.col - 1) * 16
         local ey = y + (e.row - 1) * 14
         sprite:spr(e.sprite, ex, ey)
+        if e.hitbox == "enemy" then
+          local hp_x = x + (e.col - 1) * 16 + 6
+          local hp_y = y + (e.row - 1) * 14 - 12
+          print(e.hp, hp_x, hp_y, 15)
+        end
       end
     end
   end
@@ -85,7 +131,8 @@ function battle_util_module()
     local me = {
       col = col,
       row = row,
-      sprite = sprite
+      sprite = sprite,
+      hurtbox = params.hurtbox
     }
 
     function me:update()
