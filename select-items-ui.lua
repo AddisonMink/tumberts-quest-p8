@@ -1,8 +1,13 @@
-function select_items_ui_module(items, max_items)
+function select_items_ui_module(all_items, max_items)
   local state = "select"
   local index = 1
   local selected = {}
+  local items = {}
   local me = {}
+
+  for i in all(all_items) do
+    add(items, i)
+  end
 
   function me:update()
     if state == "select" then

@@ -1,8 +1,8 @@
-function hud_ui_module(max_items)
+function hud_ui_module()
   local me = {}
 
-  function me:draw(hp, items)
-    local y = ui:draw_npatch(0, -16, 120, 16)
+  function me:draw(hp, items, max_items)
+    local y = ui:draw_npatch(0, -16, 120, 15)
     local item_x = 32
     y += 1
     ui:draw_line("hp:" .. hp, 0, y)

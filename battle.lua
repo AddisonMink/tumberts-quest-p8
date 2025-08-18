@@ -1,4 +1,4 @@
-function battle_module(hp, items)
+function battle_module(hp, all_items)
   local w = 16 * 6
   local h = 14 * 3
   local x = 64 - 4 - w / 2
@@ -9,20 +9,29 @@ function battle_module(hp, items)
   local invincibility_dur = 0.5
   local player = nil
   local entities = {}
-  local state = "ready"
-  local timer = { t = ready_dur }
+  local state = "select_items"
+  local timer = { t = 0 }
   local perfect = true
   local reward = { name = "axe", desc = "swing axe", icon = 33 }
+  local max_items = 3
+  local select_items_ui = select_items_ui_module(all_items, max_items)
   local me = {
     enemy_col = 4
   }
 
-  player = add_player(entities, 2, 2)
-  player.hp = hp
+  player = add_player(entities, hp, 2, 2)
+  player.items = {}
   add_redcap(entities, 4, 1)
 
   function me:update()
-    if state == "ready" and tick(timer) then
+    if state == "select_items" then
+      local result = select_items_ui:update()
+      if result then
+        state = "ready"
+        timer.t = ready_dur
+        player.items = result
+      end
+    elseif state == "ready" and tick(timer) then
       state = "start"
       timer.t = start_dur
     elseif state == "start" and tick(timer) then
@@ -44,10 +53,12 @@ function battle_module(hp, items)
   end
 
   function me:draw()
-    hud:draw(player.hp, items)
+    hud:draw(player.hp, player.items, max_items)
     draw_grid()
     draw_entities()
-    if state == "ready" then
+    if state == "select_items" then
+      select_items_ui:draw()
+    elseif state == "ready" then
       draw_message("ready!")
     elseif state == "start" then
       draw_message("start!")

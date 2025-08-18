@@ -104,7 +104,7 @@ function world_module(items, max_items, treasures)
 
   function me:draw()
     map()
-    hud:draw(hp, items)
+    hud:draw(hp, items, max_items)
     draw_fog()
 
     if state == "battle" then

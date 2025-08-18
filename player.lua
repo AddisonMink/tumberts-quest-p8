@@ -1,4 +1,4 @@
-function add_player(entities, col, row)
+function add_player(entities, hp, col, row)
   local attack_dur = 0.2
   local attack_cd_max = 0.2
   local lock = { t = 0 }
@@ -11,7 +11,7 @@ function add_player(entities, col, row)
     row = row,
     sprite = sprite:mk(38, "big", 0, -6),
     hitbox = "player",
-    hp = 3,
+    hp = hp,
     invincible = { t = 0 }
   }
 
@@ -28,7 +28,13 @@ function add_player(entities, col, row)
       move(0, -1, enemy_col)
     elseif btnp(3) and lock.t <= 0 then
       move(0, 1, enemy_col)
-    elseif btnp(4) then
+    elseif btnp(4) and lock.t <= 0 and cooldown.t <= 0 and #me.items > 0 then
+      local item = me.items[1]
+      del(me.items, item)
+      lock.t = item.lock
+      cooldown.t = attack_cd_max
+      me.sprite.id = 40
+      item.exec(entities, me.col, me.row)
     elseif btnp(5) and lock.t <= 0 and cooldown.t <= 0 then
       lock.t = attack_dur
       cooldown.t = attack_cd_max
