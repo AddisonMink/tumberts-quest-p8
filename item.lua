@@ -8,7 +8,7 @@ function item_module()
     lock = 0.3,
     exec = function(entities, col, row)
       local sprite = sprite:mk(26, "long")
-      local params = { dur = 0.3, hurtbox = "enemy" }
+      local params = { dur = 0.3, hurtbox = "enemy", damage = 2 }
       battle_util:melee(entities, col + 1, row, sprite, params)
     end
   }

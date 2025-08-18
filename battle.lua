@@ -87,7 +87,8 @@ function battle_module(hp, all_items)
               and target.invincible.t <= 0
 
           if hit then
-            target.hp -= 1
+            local damage = damager.damage or 1
+            target.hp -= damage
             target.invincible.t = invincibility_dur
             target.sprite.color = 7
             if target.hitbox == "player" then
@@ -200,7 +201,8 @@ function battle_util_module()
       col = col,
       row = row,
       sprite = sprite,
-      hurtbox = params.hurtbox
+      hurtbox = params.hurtbox,
+      damage = params.damage
     }
 
     function me:update()
