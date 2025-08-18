@@ -4,7 +4,7 @@ function add_redcap(entities, col, row)
   local windup_dur = 0.4
   local attack_dur = 0.4
   local axe_sprite = sprite:mk(26, "long", 0, 1, true)
-  local axe_params = { dur = attack_dur }
+  local axe_params = { dur = attack_dur, hurtbox = "player" }
 
   local state = "idle"
   local next_row = nil

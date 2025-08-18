@@ -10,7 +10,9 @@ function add_player(entities, col, row)
     col = col,
     row = row,
     sprite = sprite:mk(38, "big", 0, -6),
-    player = true
+    hitbox = "player",
+    hp = 3,
+    invincible = { t = 0 }
   }
 
   function me:update(enemy_col)
