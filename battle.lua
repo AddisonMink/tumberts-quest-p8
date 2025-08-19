@@ -42,6 +42,7 @@ function battle_module(hp, all_items)
       hit_system()
       invincibility_system()
       death_system()
+      column_system()
       end_system()
     elseif state == "win" and btnp(5) then
       return { type = "win", hp = player.hp }
@@ -115,6 +116,15 @@ function battle_module(hp, all_items)
     for e in all(entities) do
       if e.hp and e.hp <= 0 then
         del(entities, e)
+      end
+    end
+  end
+
+  function column_system()
+    enemy_col = 7
+    for e in all(entities) do
+      if e.hitbox == "enemy" and e.col < enemy_col then
+        enemy_col = e.col
       end
     end
   end
