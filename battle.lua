@@ -22,6 +22,7 @@ function battle_module(hp, all_items)
   player = add_player(entities, hp, 2, 2)
   player.items = {}
   add_redcap(entities, 4, 1)
+  add_scamp(entities, 6, 1)
 
   function me:update()
     if state == "select_items" then
