@@ -37,11 +37,6 @@ function add_scamp(entities, col, row)
     end
   end
 
-  function can_attack(player)
-    return me.row == player.row
-        and tick(cooldown)
-  end
-
   add(entities, me)
 end
 

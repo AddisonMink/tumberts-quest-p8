@@ -21,7 +21,7 @@ hud = hud_ui_module()
 battle_util = battle_util_module()
 items = item_module()
 
-inventory = {items.bow}
+inventory = { items.bow }
 
 treasures = {
   [7 .. "," .. 7] = items[2]
@@ -47,6 +47,7 @@ function _draw()
   cls()
   world:draw()
   --battle:draw()
+  if debug_msg then print(debug_msg, 64, 64, 0) end
 end
 
 __gfx__

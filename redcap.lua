@@ -20,6 +20,12 @@ function add_redcap(entities, col, row)
     invincible = { t = 0 }
   }
 
+  local function can_attack(player)
+    return me.row == player.row
+        and me.col - 1 == player.col
+        and tick(cooldown)
+  end
+
   function me:update(enemy_col, player)
     if state == "idle" and can_attack(player) then
       state = "windup"
@@ -33,7 +39,7 @@ function add_redcap(entities, col, row)
       state = "idle"
     elseif state == "moving" and tick(timer) then
       state = "idle"
-      battle_util:move(me, entities, enemy_col, col, next_row)
+      battle_util:move(me, entities, enemy_col, me.col, next_row)
     elseif state == "windup" and tick(timer) then
       state = "attack"
       timer.t = windup_dur
@@ -44,12 +50,6 @@ function add_redcap(entities, col, row)
       cooldown.t = attack_cd
       me.sprite.id = 14
     end
-  end
-
-  function can_attack(player)
-    return me.row == player.row
-        and me.col - 1 == player.col
-        and tick(cooldown)
   end
 
   add(entities, me)
