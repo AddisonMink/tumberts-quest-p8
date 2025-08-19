@@ -12,7 +12,7 @@ function battle_module(hp, all_items)
   local state = #all_items > 0 and "select_items" or "ready"
   local timer = { t = ready_dur }
   local perfect = true
-  local reward = items.axe
+  local rewards = {}
   local max_items = 3
   local select_items_ui = select_items_ui_module(all_items, max_items)
   local me = {
@@ -23,6 +23,9 @@ function battle_module(hp, all_items)
   player.items = {}
   add_redcap(entities, 4, 1)
   add_scamp(entities, 6, 1)
+  for e in all(entities) do
+    if e.reward then add(rewards, e.reward) end
+  end
 
   function me:update()
     if state == "select_items" then
@@ -47,6 +50,8 @@ function battle_module(hp, all_items)
     elseif state == "win" and btnp(5) then
       return { type = "win", hp = player.hp }
     elseif state == "perfect" and btnp(5) then
+      local i = flr(rnd(#rewards)) + 1
+      local reward = rewards[i]
       return { type = "perfect", reward = reward, hp = player.hp }
     elseif state == "lose" and btnp(5) then
       return { type = "lose", hp = 0 }

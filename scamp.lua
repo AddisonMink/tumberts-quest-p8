@@ -14,7 +14,8 @@ function add_scamp(entities, col, row)
     sprite = sprite:mk(96, "big", 0, -6),
     hitbox = "enemy",
     hp = 1,
-    invincible = { t = 0 }
+    invincible = { t = 0 },
+    reward = items.bow
   }
 
   function me:update(enemy_col, player)
@@ -68,12 +69,13 @@ end
 function add_arrow(entities, col, row, hurtbox)
   local speed = 0.075
   local dx = hurtbox == "player" and -1 or 1
+  local flip_x = dx == -1
   local timer = { t = speed }
 
   local me = {
     col = col,
     row = row,
-    sprite = sprite:mk(66, "long", 0, 0, true),
+    sprite = sprite:mk(66, "long", 0, 0, flip_x),
     hurtbox = hurtbox
   }
 

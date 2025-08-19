@@ -36,6 +36,7 @@ function tick(timer)
 end
 
 function _init()
+  srand(time())
 end
 
 function _update()
