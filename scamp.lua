@@ -21,7 +21,7 @@ function add_scamp(entities, col, row)
     if state == "idle" and me.row == player.row and tick(cooldown) then
       state = "attack"
       timer.t = attack_dur
-      add_bow(entities, me.col, me.row, attack_dur)
+      add_bow(entities, me.col, me.row, attack_dur, "player")
     elseif state == "idle" and me.row ~= player.row then
       state = "moving"
       timer.t = move_delay
@@ -45,13 +45,15 @@ function add_scamp(entities, col, row)
   add(entities, me)
 end
 
-function add_bow(entities, col, row, dur)
+function add_bow(entities, col, row, dur, hurtbox)
   local timer = { t = dur / 2 }
   local state = "draw"
+  local flip_x = hurtbox == "player"
+  local offset_x = hurtbox == "player" and 4 or 8
   local me = {
     col = col,
     row = row,
-    sprite = sprite:mk(64, "tall", 4, -4, true)
+    sprite = sprite:mk(64, "tall", offset_x, -4, flip_x)
   }
 
   function me:update()
@@ -59,7 +61,7 @@ function add_bow(entities, col, row, dur)
       state = "shoot"
       me.sprite.id = 65
       timer.t = dur / 2
-      add_arrow(entities, col, row)
+      add_arrow(entities, col, row, hurtbox)
     elseif state == "shoot" and tick(timer) then
       del(entities, me)
     end
@@ -68,22 +70,23 @@ function add_bow(entities, col, row, dur)
   add(entities, me)
 end
 
-function add_arrow(entities, col, row)
+function add_arrow(entities, col, row, hurtbox)
   local speed = 0.075
+  local dx = hurtbox == "player" and -1 or 1
   local timer = { t = speed }
 
   local me = {
     col = col,
     row = row,
     sprite = sprite:mk(66, "long", 0, 0, true),
-    hurtbox = "player"
+    hurtbox = hurtbox
   }
 
   function me:update()
     if tick(timer) then
       timer.t = speed
-      me.col -= 1
-      if me.col < 1 then del(entities, me) end
+      me.col += dx
+      if me.col < 1 or me.col > 6 then del(entities, me) end
     end
   end
 

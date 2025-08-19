@@ -21,7 +21,7 @@ hud = hud_ui_module()
 battle_util = battle_util_module()
 items = item_module()
 
-inventory = {}
+inventory = {items.bow}
 
 treasures = {
   [7 .. "," .. 7] = items[2]
