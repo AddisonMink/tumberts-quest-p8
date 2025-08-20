@@ -21,8 +21,8 @@ function battle_module(hp, all_items)
 
   player = add_player(entities, hp, 2, 2)
   player.items = {}
-  add_redcap(entities, 4, 1)
-  add_scamp(entities, 6, 1)
+  add_witch(entities, 6, 1)
+
   for e in all(entities) do
     if e.reward then add(rewards, e.reward) end
   end
@@ -186,7 +186,7 @@ function battle_util_module()
 
   function me:move(entity, entities, enemy_col, col, row)
     if col < 1 or col > 6 or row < 1 or row > 3 then return end
-    if entity.player and col >= enemy_col then return end
+    if entity.hitbox == "player" and col >= enemy_col then return end
     local h = entity.col ~= col
     me:blur(entities, entity.col, entity.row, h)
     entity.col = col
