@@ -21,7 +21,7 @@ function battle_module(hp, all_items)
 
   player = add_player(entities, hp, 2, 2)
   player.items = {}
-  add_witch(entities, 6, 1)
+  add_cutthroat(entities, 5, 1)
 
   for e in all(entities) do
     if e.reward then add(rewards, e.reward) end
@@ -91,6 +91,7 @@ function battle_module(hp, all_items)
           local hit = damager.hurtbox == target.hitbox
               and damager.col == target.col
               and damager.row == target.row
+              and target.hp
               and target.invincible.t <= 0
 
           if hit then
@@ -120,6 +121,7 @@ function battle_module(hp, all_items)
   function death_system()
     for e in all(entities) do
       if e.hp and e.hp <= 0 then
+        if e.die then e:die() end
         del(entities, e)
       end
     end
@@ -128,7 +130,7 @@ function battle_module(hp, all_items)
   function column_system()
     enemy_col = 7
     for e in all(entities) do
-      if e.hitbox == "enemy" and e.col < enemy_col then
+      if e.hitbox == "enemy" and not e.no_claim and e.col < enemy_col then
         enemy_col = e.col
       end
     end
@@ -169,7 +171,7 @@ function battle_module(hp, all_items)
         local ex = x + (e.col - 1) * 16
         local ey = y + (e.row - 1) * 14
         sprite:spr(e.sprite, ex, ey)
-        if e.hitbox == "enemy" then
+        if e.hitbox == "enemy" and e.hp then
           local hp_x = x + (e.col - 1) * 16 + 6
           local hp_y = y + (e.row - 1) * 14 - 12
           print(e.hp, hp_x, hp_y, 15)
@@ -187,6 +189,13 @@ function battle_util_module()
   function me:move(entity, entities, enemy_col, col, row)
     if col < 1 or col > 6 or row < 1 or row > 3 then return end
     if entity.hitbox == "player" and col >= enemy_col then return end
+
+    for e in all(entities) do
+      if e ~= me and e.hitbox and e.row == row and e.col == col then
+        return
+      end
+    end
+
     local h = entity.col ~= col
     me:blur(entities, entity.col, entity.row, h)
     entity.col = col
