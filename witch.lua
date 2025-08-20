@@ -20,7 +20,8 @@ function add_witch(entities, col, row)
     sprite = sprite:mk(98, "big", 0, -6),
     hitbox = "enemy",
     hp = 3,
-    invincible = { t = 0 }
+    invincible = { t = 0 },
+    reward = items.staff
   }
 
   function me:update(enemy_col, player)
@@ -65,7 +66,7 @@ function add_witch_flame(entities, col, row, dur, trap_col)
       state = 2
       timer.t = dur / 2
       for r = 1, 3, 1 do
-        add_fire_trap(entities, trap_col, r)
+        add_fire_trap(entities, trap_col, r, "player")
       end
     elseif state == 2 and tick(timer) then
       del(entities, me)
@@ -75,7 +76,7 @@ function add_witch_flame(entities, col, row, dur, trap_col)
   add(entities, me)
 end
 
-function add_fire_trap(entities, col, row)
+function add_fire_trap(entities, col, row, hurtbox)
   local start_dur = 0.5
   local burn_dur = 1.0
   local timer = { t = start_dur }
@@ -91,7 +92,7 @@ function add_fire_trap(entities, col, row)
     if state == "start" and tick(timer) then
       state = "burn"
       timer.t = burn_dur
-      me.hurtbox = "player"
+      me.hurtbox = hurtbox
     elseif state == "burn" then
       me.sprite.id = flr(time() / 0.2) % 2 == 0 and 68 or 84
       if tick(timer) then del(entities, me) end

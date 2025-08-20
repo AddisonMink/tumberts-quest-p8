@@ -23,5 +23,18 @@ function item_module()
     end
   }
 
+  me.staff = {
+    name = "staff",
+    desc = "fire col 2 ahead",
+    icon = 53,
+    lock = 1,
+    exec = function(entities, col, row)
+      if col + 3 > 6 then return end
+      for r = 1, 3, 1 do
+        add_fire_trap(entities, col + 3, r, "enemy")
+      end
+    end
+  }
+
   return me
 end
