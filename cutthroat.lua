@@ -17,7 +17,8 @@ function add_cutthroat(entities, col, row)
     sprite = sprite:mk(70, "big", 0, -6),
     hitbox = "enemy",
     hp = 3,
-    invincible = { t = 0 }
+    invincible = { t = 0 },
+    reward = items.axe
   }
 
   local function can_attack(player)

@@ -1,4 +1,4 @@
-function world_module(items, max_items, treasures)
+function world_module(items, max_items, treasures, battles)
   local state = "enter"
   local nodes = {}
   local from_key = nil
@@ -72,8 +72,14 @@ function world_module(items, max_items, treasures)
         state = "idle"
       elseif id == 36 then
         -- battle node
-        state = "battle"
-        battle = battle_module(hp, items)
+        if battles[node_key] then
+          state = "battle"
+          battle = battle_module(hp, items, battles[node_key])
+          debug_msg = node.x .. "," .. node.y
+        else
+          state = "idle"
+          mset(node.x, node.y, 49)
+        end
       elseif id == 5 then
         -- treasure node
         if treasures[node_key] then

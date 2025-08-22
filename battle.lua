@@ -1,4 +1,4 @@
-function battle_module(hp, all_items)
+function battle_module(hp, all_items, enemies)
   local w = 16 * 6
   local h = 14 * 3
   local x = 64 - 4 - w / 2
@@ -21,7 +21,10 @@ function battle_module(hp, all_items)
 
   player = add_player(entities, hp, 2, 2)
   player.items = {}
-  add_cutthroat(entities, 5, 1)
+
+  for e in all(enemies) do
+    e.f(entities, e.col, e.row)
+  end
 
   for e in all(entities) do
     if e.reward then add(rewards, e.reward) end
@@ -60,6 +63,7 @@ function battle_module(hp, all_items)
   end
 
   function me:draw()
+    cls(0)
     hud:draw(player.hp, player.items, max_items)
     draw_grid()
     draw_entities()

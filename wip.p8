@@ -23,13 +23,48 @@ hud = hud_ui_module()
 battle_util = battle_util_module()
 items = item_module()
 
-inventory = { items.staff }
+inventory = { items.bow, items.axe }
+
+battles = {
+  [10 .. "," .. 3] = {
+    { f = add_redcap, col = 4, row = 2 },
+    { f = add_scamp, col = 6, row = 1 }
+  },
+  [4 .. "," .. 3] = {
+    { f = add_redcap, col = 4, row = 1 },
+    { f = add_cutthroat, col = 5, row = 2 }
+  },
+  [1 .. "," .. 7] = {
+    { f = add_cutthroat, col = 4, row = 1 },
+    { f = add_witch, col = 5, row = 2 }
+  },
+  [7 .. "," .. 9] = {
+    { f = add_redcap, col = 4, row = 2 },
+    { f = add_redcap, col = 4, row = 3 },
+    { f = add_witch, col = 5, row = 1 }
+  },
+  [13 .. "," .. 9] = {
+    { f = add_redcap, col = 4, row = 2 },
+    { f = add_witch, col = 5, row = 1 },
+    { f = add_witch, col = 6, row = 3 }
+  },
+  [13 .. "," .. 11] = {
+    { f = add_cutthroat, col = 4, row = 1 },
+    { f = add_cutthroat, col = 4, row = 3 },
+    { f = add_witch, col = 5, row = 2 }
+  },
+  [10 .. "," .. 11] = {
+    { f = add_cutthroat, col = 5, row = 1 },
+    { f = add_redcap, col = 4, row = 1 },
+    { f = add_redcap, col = 4, row = 3 }
+  }
+}
 
 treasures = {
   [7 .. "," .. 7] = items[2]
 }
 
-world = world_module(inventory, max_items, treasures)
+world = world_module(inventory, max_items, treasures, battles)
 --battle = battle_module()
 
 function tick(timer)
@@ -50,7 +85,7 @@ function _draw()
   cls()
   world:draw()
   --battle:draw()
-  if debug_msg then print(debug_msg, 64, 64, 0) end
+  if debug_msg then print(debug_msg, 64, 16, 15) end
 end
 
 __gfx__
