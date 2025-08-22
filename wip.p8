@@ -23,7 +23,7 @@ hud = hud_ui_module()
 battle_util = battle_util_module()
 items = item_module()
 
-inventory = { items.bow, items.axe }
+inventory = {}
 
 battles = {
   [10 .. "," .. 3] = {
@@ -61,7 +61,12 @@ battles = {
 }
 
 treasures = {
-  [7 .. "," .. 7] = items[2]
+  [1 .. "," .. 1] = items.axe,
+  [13 .. "," .. 1] = items.axe,
+  [1 .. "," .. 5] = items.axe,
+  [13 .. "," .. 5] = items.axe,
+  [7 .. "," .. 7] = items.axe,
+  [1 .. "," .. 11] = items.axe
 }
 
 world = world_module(inventory, max_items, treasures, battles)
