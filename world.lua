@@ -75,7 +75,6 @@ function world_module(items, max_items, treasures, battles)
         if battles[node_key] then
           state = "battle"
           battle = battle_module(hp, items, battles[node_key])
-          debug_msg = node.x .. "," .. node.y
         else
           state = "idle"
           mset(node.x, node.y, 49)
