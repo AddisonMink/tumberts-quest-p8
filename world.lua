@@ -1,5 +1,5 @@
 function world_module(items, max_items, treasures, battles)
-  local state = "enter"
+  local state = "start"
   local nodes = {}
   local from_key = nil
   local to_key = nil
@@ -16,8 +16,10 @@ function world_module(items, max_items, treasures, battles)
 
   function me:update()
     local node = nodes[node_key]
-
-    if state == "battle" then
+    if state == "start" then
+      local result = start_ui:update()
+      if result then state = "enter" end
+    elseif state == "battle" then
       local result = battle:update()
       if result.type == "win" then
         state = "idle"
@@ -112,7 +114,9 @@ function world_module(items, max_items, treasures, battles)
     hud:draw(hp, items, max_items)
     draw_fog()
 
-    if state == "battle" then
+    if state == "start" then
+      start_ui:draw()
+    elseif state == "battle" then
       battle:draw()
     elseif state == "inventory" then
       inventory_ui:draw()
