@@ -21,14 +21,17 @@ function world_module(items, max_items, treasures, battles)
       if result then state = "enter" end
     elseif state == "battle" then
       local result = battle:update()
-      if result.type == "win" then
+      if result.type == "lose" then
+        state = "lose"
+      elseif result.type and node_key == final_node then
+        state = "end"
+      elseif result.type == "win" then
         state = "idle"
         hp = result.hp
         mset(node.x, node.y, 49)
       elseif result.type == "perfect" then
         state = "add_item"
         add_item_ui = add_item_ui_module(items, max_items, result.reward)
-      elseif result.type == "lose" then
       end
     elseif state == "idle" then
       if btnp(0) and node.left then
@@ -106,6 +109,7 @@ function world_module(items, max_items, treasures, battles)
         state = "idle"
         mset(node.x, node.y, 49)
       end
+    elseif state == "end" then
     end
   end
 
@@ -116,6 +120,8 @@ function world_module(items, max_items, treasures, battles)
 
     if state == "start" then
       start_ui:draw()
+    elseif state == "end" then
+      end_ui:draw()
     elseif state == "battle" then
       battle:draw()
     elseif state == "inventory" then

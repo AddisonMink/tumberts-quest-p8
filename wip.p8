@@ -7,6 +7,7 @@ __lua__
 #include select-items-ui.lua
 #include hud-ui.lua
 #include start-ui.lua
+#include end-ui.lua
 #include sprite.lua
 #include player.lua
 #include redcap.lua
@@ -23,6 +24,7 @@ ui = ui_module()
 sprite = sprite_module()
 hud = hud_ui_module()
 start_ui = start_ui_module()
+end_ui = end_ui_module()
 battle_util = battle_util_module()
 items = item_module()
 
@@ -60,6 +62,8 @@ battles = {
     { f = add_jester, col = 5, row = 2 }
   }
 }
+
+final_node = 10 .. "," .. 11
 
 treasures = {
   [1 .. "," .. 1] = items.axe,
