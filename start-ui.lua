@@ -31,6 +31,7 @@ function start_ui_module()
     y = ui:draw_line(l6, x, y, w)
     y = ui:draw_line(l7, x, y, w)
     sprite:spr(s, x + (w - 16) / 2, y)
+    spr(78, x + (w - 16) / 2 - 4, y - 2)
   end
 
   return me
